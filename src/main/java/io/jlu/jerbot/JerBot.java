@@ -3,6 +3,8 @@ package io.jlu.jerbot;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -27,36 +29,42 @@ public class JerBot extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        User author = event.getAuthor();
+        MessageChannel channel = event.getChannel();
+
         System.out.println("We received a message from " +
-                event.getAuthor().getName() + ": " +
+                author.getName() + ": " +
                 event.getMessage().getContentDisplay()
         );
 
-        if (event.getMessage().getContentRaw() == null || event.getMessage().getContentRaw().length() == 0) {
+        String contentRaw = event.getMessage().getContentRaw();
+
+        if (contentRaw == null || contentRaw.length() == 0) {
             return;
         }
 
-        if (event.getMessage().getContentRaw().substring(0,1).equals("?")) {
-            if (event.getMessage().getContentRaw().substring(1).equals("foo")) {
-                event.getChannel().sendMessage("bar").queue();
-            } else if (event.getMessage().getContentRaw().substring(1).equals("hi")) {
-                event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();
-            } else if (event.getMessage().getContentRaw().substring(1).equals("ahnee")) {
-                event.getChannel().sendMessage("frick").queue();
-            } else if (event.getMessage().getContentRaw().substring(1, 6).equals("roast")) {
-                List<Member> memberList = event.getGuild().getMembersByName(event.getMessage().getContentRaw()
-                        .substring(7),true);
+        if (contentRaw.startsWith("?")) {
+            String command = contentRaw.substring(1);
 
-                if (memberList.size() == 0) {
-                    memberList = event.getGuild().getMembersByNickname(event.getMessage().getContentRaw()
-                            .substring(7),true);
+            if (command.equals("foo")) {
+                channel.sendMessage("bar").queue();
+            } else if (command.equals("hi")) {
+                channel.sendMessage("Hello, " + author.getName()).queue();
+            } else if (command.equals("ahnee")) {
+                channel.sendMessage("frick").queue();
+            } else if (command.startsWith("roast ")) {
+                String target = contentRaw.substring(7);
+                List<Member> memberList = event.getGuild().getMembersByName(target,true);
+
+                if (memberList.isEmpty()) {
+                    memberList = event.getGuild().getMembersByNickname(target,true);
                 }
 
-                if (memberList.size() != 0) {
-                    event.getChannel().sendMessage(
-                            event.getAuthor().getName() + " -insert msg- " + memberList.get(0).getEffectiveName()).queue();
+                if (!memberList.isEmpty()) {
+                    channel.sendMessage(
+                            author.getName() + " -insert msg- " + memberList.get(0).getEffectiveName()).queue();
                 } else {
-                    event.getChannel().sendMessage("No one found").queue();
+                    channel.sendMessage("No one found").queue();
                 }
             }
 //            else {
