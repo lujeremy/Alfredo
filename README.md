@@ -1,1 +1,1 @@
-# JerBot
+# io.jlu.jerbot.JerBot
