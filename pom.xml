@@ -15,6 +15,12 @@
             <artifactId>JDA</artifactId>
             <version>3.7.1_399</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
+        </dependency>
     </dependencies>
 
 

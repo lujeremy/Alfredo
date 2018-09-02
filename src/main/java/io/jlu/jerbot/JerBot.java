@@ -1,5 +1,9 @@
 package io.jlu.jerbot;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Member;
@@ -52,6 +56,14 @@ public class JerBot extends ListenerAdapter {
                 channel.sendMessage("Hello, " + author.getName()).queue();
             } else if (command.equals("ahnee")) {
                 channel.sendMessage("frick").queue();
+            } else if (command.equals("assign")) {
+                try {
+                    HttpResponse<JsonNode> jsonResponse = Unirest.get("https://corporatebs-generator.sameerkumar.website/").asJson();
+                    String phrase = jsonResponse.getBody().getObject().getString("phrase");
+                    channel.sendMessage(phrase).queue();
+                } catch (UnirestException e) {
+                    return;
+                }
             } else if (command.startsWith("roast ")) {
                 String target = contentRaw.substring(7);
                 List<Member> memberList = event.getGuild().getMembersByName(target,true);
