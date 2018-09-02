@@ -1,5 +1,6 @@
 package io.jlu.jerbot;
 
+import io.jlu.jerbot.utils.JerBotUtils;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -14,7 +15,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JerBot extends ListenerAdapter {
@@ -48,7 +48,7 @@ public class JerBot extends ListenerAdapter {
         }
 
         if (contentRaw.startsWith("?")) {
-            String command = contentRaw.substring(1);
+            String command = contentRaw.substring(1).toLowerCase();
 
             if (command.equals("foo")) {
                 channel.sendMessage("bar").queue();
@@ -56,25 +56,28 @@ public class JerBot extends ListenerAdapter {
                 channel.sendMessage("Hello, " + author.getName()).queue();
             } else if (command.equals("ahnee")) {
                 channel.sendMessage("frick").queue();
-            } else if (command.equals("assign")) {
+            } else if (command.startsWith("givetask ")) {
                 try {
                     HttpResponse<JsonNode> jsonResponse = Unirest.get("https://corporatebs-generator.sameerkumar.website/").asJson();
                     String phrase = jsonResponse.getBody().getObject().getString("phrase");
-                    channel.sendMessage(phrase).queue();
+                    String target = contentRaw.substring("givetask ".length() + 1);
+                    Member match = JerBotUtils.getFirstMatchingMember(target, event);
+
+                    if (match != null) {
+                        channel.sendMessage(match.getEffectiveName() + ", please " + phrase.toLowerCase()).queue();
+                    } else {
+                        channel.sendMessage("No one found").queue();
+                    }
                 } catch (UnirestException e) {
                     return;
                 }
             } else if (command.startsWith("roast ")) {
-                String target = contentRaw.substring(7);
-                List<Member> memberList = event.getGuild().getMembersByName(target,true);
+                String target = contentRaw.substring("roast ".length() + 1);
+                Member match = JerBotUtils.getFirstMatchingMember(target, event);
 
-                if (memberList.isEmpty()) {
-                    memberList = event.getGuild().getMembersByNickname(target,true);
-                }
-
-                if (!memberList.isEmpty()) {
+                if (match != null) {
                     channel.sendMessage(
-                            author.getName() + " -insert msg- " + memberList.get(0).getEffectiveName()).queue();
+                            author.getName() + " -insert msg- " + match.getEffectiveName()).queue();
                 } else {
                     channel.sendMessage("No one found").queue();
                 }
