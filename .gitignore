@@ -11,6 +11,11 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/compiler.xml
+.idea/misc.xml
+.idea/vcs.xml
+token.txt
+.idea/.name
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

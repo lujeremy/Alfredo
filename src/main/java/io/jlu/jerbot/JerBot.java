@@ -84,9 +84,6 @@ public class JerBot extends ListenerAdapter {
                     channel.sendMessage("No one found").queue();
                 }
             }
-//            else {
-//                event.getChannel().sendMessage("Me no understand").queue();
-//            }
         }
     }
 }
