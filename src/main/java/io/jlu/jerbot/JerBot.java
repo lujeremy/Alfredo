@@ -2,6 +2,7 @@ package io.jlu.jerbot;
 
 import io.jlu.jerbot.commands.Command;
 import io.jlu.jerbot.commands.GiveTaskCommand;
+import io.jlu.jerbot.commands.RoastCommand;
 import io.jlu.jerbot.utils.JerBotUtils;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -32,6 +33,7 @@ public class JerBot extends ListenerAdapter {
         String token = br.readLine();
 
         commandMap.put("givetask", new GiveTaskCommand());
+        commandMap.put("roast", new RoastCommand());
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());
@@ -74,15 +76,7 @@ public class JerBot extends ListenerAdapter {
             } else if (command.startsWith("givetask ")) {
                 commandMap.get("givetask").handleEvent(event, parameter);
             } else if (command.startsWith("roast ")) {
-                String target = contentRaw.substring("roast ".length() + 1);
-                Member match = JerBotUtils.getFirstMatchingMember(target, event);
-
-                if (match != null) {
-                    channel.sendMessage(
-                            author.getName() + " -insert msg- " + match.getEffectiveName()).queue();
-                } else {
-                    channel.sendMessage("No one found").queue();
-                }
+                commandMap.get("roast").handleEvent(event, parameter);
             }
         }
     }
