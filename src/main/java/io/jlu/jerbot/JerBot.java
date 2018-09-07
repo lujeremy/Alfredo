@@ -34,6 +34,10 @@ public class JerBot extends ListenerAdapter {
 
         commandMap.put("givetask", new GiveTaskCommand());
         commandMap.put("roast", new RoastCommand());
+        Command hiCommand = (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();};
+        commandMap.put("hi", hiCommand);
+        Command ahneeCommand = (event, parameter) -> {event.getChannel().sendMessage("frick").queue();};
+        commandMap.put("ahnee", ahneeCommand);
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());
@@ -58,25 +62,19 @@ public class JerBot extends ListenerAdapter {
         }
 
         String[] contentArr = contentRaw.split(" ", 2);
-        String command = contentArr[0].substring(1);
+        String command = contentArr[0].substring(1).toLowerCase();
         String parameter = "";
         if (contentArr.length > 1) {
-            parameter = contentArr[1];
+            parameter = contentArr[1].toLowerCase();
         }
 
         if (contentRaw.startsWith("?")) {
-//            String command = contentRaw.substring(1).toLowerCase();
+            Command commandHandler = commandMap.get(command);
 
-            if (command.equals("foo")) {
-                channel.sendMessage("bar").queue();
-            } else if (command.equals("hi")) {
-                channel.sendMessage("Hello, " + author.getName()).queue();
-            } else if (command.equals("ahnee")) {
-                channel.sendMessage("frick").queue();
-            } else if (command.startsWith("givetask ")) {
-                commandMap.get("givetask").handleEvent(event, parameter);
-            } else if (command.startsWith("roast ")) {
-                commandMap.get("roast").handleEvent(event, parameter);
+            if (commandHandler != null) {
+                commandHandler.handleEvent(event, parameter);
+            } else {
+                System.out.println("no command");
             }
         }
     }
