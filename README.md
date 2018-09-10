@@ -12,7 +12,7 @@ Run an Application Config-- running an install Maven Config before launch
 
 ## Built With
 
-* [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) - The web framework used
+* Java 8
 * [Maven](https://maven.apache.org/) - Dependency Management
 
 ## License
