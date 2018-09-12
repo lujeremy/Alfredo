@@ -28,7 +28,7 @@ public class GiveTaskCommand implements Command {
             Member match = JerBotUtils.getFirstMatchingMember(target, event);
 
             if (match != null) {
-                channel.sendMessage(match.getUser().getName() + ", please " + phrase.toLowerCase()).queue();
+                channel.sendMessage(match.getEffectiveName() + ", please " + phrase.toLowerCase()).queue();
             } else {
                 channel.sendMessage("No one found").queue();
             }
