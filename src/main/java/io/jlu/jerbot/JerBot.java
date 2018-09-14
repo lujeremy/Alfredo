@@ -2,6 +2,7 @@ package io.jlu.jerbot;
 
 import io.jlu.jerbot.commands.Command;
 import io.jlu.jerbot.commands.GiveTaskCommand;
+import io.jlu.jerbot.commands.RecordCommand;
 import io.jlu.jerbot.commands.RoastCommand;
 import io.jlu.jerbot.utils.JerBotUtils;
 import com.mashape.unirest.http.HttpResponse;
@@ -34,6 +35,7 @@ public class JerBot extends ListenerAdapter {
 
         commandMap.put("givetask", new GiveTaskCommand());
         commandMap.put("roast", new RoastCommand());
+        commandMap.put("record", new RecordCommand());
         Command hiCommand = (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();};
         commandMap.put("hi", hiCommand);
         Command ahneeCommand = (event, parameter) -> {event.getChannel().sendMessage("frick").queue();};
@@ -48,7 +50,6 @@ public class JerBot extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         User author = event.getAuthor();
-        MessageChannel channel = event.getChannel();
 
         System.out.println("We received a message from " +
                 author.getName() + ": " +
@@ -68,7 +69,7 @@ public class JerBot extends ListenerAdapter {
             parameter = contentArr[1].toLowerCase();
         }
 
-        if (contentRaw.startsWith("?")) {
+        if (contentRaw.startsWith("!")) {
             Command commandHandler = commandMap.get(command);
 
             if (commandHandler != null) {
