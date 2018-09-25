@@ -29,7 +29,7 @@ public class JerBot extends ListenerAdapter {
 
     public static void main(String[] args) throws LoginException, IOException {
 
-        String jdbcUrl = "mysql://142.93.75.76:3306";
+        String jdbcUrl = "";
         Jdbi jdbi = Jdbi.create(jdbcUrl);
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
