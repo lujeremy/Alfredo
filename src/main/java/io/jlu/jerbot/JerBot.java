@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.jdbi.v3.core.Jdbi;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
@@ -27,6 +28,10 @@ public class JerBot extends ListenerAdapter {
     static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
+
+        String jdbcUrl = "mysql://142.93.75.76:3306";
+        Jdbi jdbi = Jdbi.create(jdbcUrl);
+
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File("token.txt");
 
