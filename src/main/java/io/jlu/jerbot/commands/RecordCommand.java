@@ -2,11 +2,14 @@ package io.jlu.jerbot.commands;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.jdbi.v3.core.Jdbi;
 
 public class RecordCommand implements Command {
 
-    public RecordCommand() {
+    final private Jdbi jdbi;
 
+    public RecordCommand(Jdbi jdbi) {
+        this.jdbi = jdbi;
     }
 
     @Override
@@ -40,7 +43,15 @@ public class RecordCommand implements Command {
             }
         }
 
-        channel.sendMessage("Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
+        final String workoutNameCopy = workoutName;
+        final int repsCopy = reps;
+        final int weightCopy = weight;
 
+        channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
+
+        this.jdbi.useHandle(handle -> {
+            handle.execute("create table if not exists Workouts (Workout varchar(100), Reps int, Weight int)");
+            handle.execute("insert into Workouts (Workout, Reps, Weight) values (?, ?, ?)", workoutNameCopy, repsCopy, weightCopy);
+        });
     }
 }

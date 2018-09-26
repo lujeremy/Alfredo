@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.security.auth.login.LoginException;
@@ -29,8 +30,8 @@ public class JerBot extends ListenerAdapter {
 
     public static void main(String[] args) throws LoginException, IOException {
 
-        String jdbcUrl = "";
-        Jdbi jdbi = Jdbi.create(jdbcUrl);
+        String jdbcUrl = "jdbc:mysql://localhost:3306/workout";
+        Jdbi jdbi = Jdbi.create(jdbcUrl, "Jeremy", "");
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File("token.txt");
@@ -40,11 +41,9 @@ public class JerBot extends ListenerAdapter {
 
         commandMap.put("givetask", new GiveTaskCommand());
         commandMap.put("roast", new RoastCommand());
-        commandMap.put("record", new RecordCommand());
-        Command hiCommand = (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();};
-        commandMap.put("hi", hiCommand);
-        Command ahneeCommand = (event, parameter) -> {event.getChannel().sendMessage("frick").queue();};
-        commandMap.put("ahnee", ahneeCommand);
+        commandMap.put("record", new RecordCommand(jdbi));
+        commandMap.put("hi", (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();});
+        commandMap.put("ahnee", (event, parameter) -> {event.getChannel().sendMessage("frick").queue();});
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());
