@@ -46,12 +46,13 @@ public class RecordCommand implements Command {
         final String workoutNameCopy = workoutName;
         final int repsCopy = reps;
         final int weightCopy = weight;
+        final long time = System.currentTimeMillis();
 
         channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
 
         this.jdbi.useHandle(handle -> {
-            handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Workout varchar(100), Reps int, Weight int)");
-            handle.execute("insert into Workouts (Workout, Reps, Weight) values (?, ?, ?)", workoutNameCopy, repsCopy, weightCopy);
+            handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Time long, Workout varchar(100), Reps int, Weight int)");
+            handle.execute("insert into Workouts (Time, Workout, Reps, Weight) values (?, ?, ?, ?)", time, workoutNameCopy, repsCopy, weightCopy);
         });
     }
 }

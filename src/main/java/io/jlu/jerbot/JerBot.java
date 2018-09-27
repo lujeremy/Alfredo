@@ -23,7 +23,7 @@ public class JerBot extends ListenerAdapter {
     public static void main(String[] args) throws LoginException, IOException {
 
         String jdbcUrl = "jdbc:mysql://localhost:3306/workout";
-        Jdbi jdbi = Jdbi.create(jdbcUrl, "Jeremy", "");
+        Jdbi jdbi = Jdbi.create(jdbcUrl, "Jeremy", "9033");
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File("token.txt");
