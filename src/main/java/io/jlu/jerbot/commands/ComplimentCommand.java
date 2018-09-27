@@ -9,9 +9,12 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class GiveTaskCommand implements Command {
+import java.util.List;
+import java.util.Map;
 
-    public GiveTaskCommand() {
+public class ComplimentCommand implements Command {
+
+    public ComplimentCommand() {
 
     }
 
@@ -22,17 +25,28 @@ public class GiveTaskCommand implements Command {
         String contentRaw = event.getMessage().getContentRaw();
 
         try {
-            HttpResponse<JsonNode> jsonResponse = Unirest.get("https://corporatebs-generator.sameerkumar.website/").asJson();
-            String phrase = jsonResponse.getBody().getObject().getString("phrase");
-            String target = contentRaw.substring("givetask ".length() + 1);
+            System.out.println("hi");
+            HttpResponse<String> jsonResponse = Unirest.get("http://compliment-api.herokuapp.com").asString();
+
+            System.out.println("hey");
+            String phrase = jsonResponse.getBody();
+            System.out.println(phrase);
+
+            if (contentRaw.length() < "compliment ".length() + 2) {
+                channel.sendMessage("You can't compliment air!").queue();
+                return;
+            }
+
+            String target = contentRaw.substring("compliment ".length() + 1);
             Member match = JerBotUtils.getFirstMatchingMember(target, event);
 
             if (match != null) {
-                channel.sendMessage(match.getEffectiveName() + ", please " + phrase.toLowerCase()).queue();
+                channel.sendMessage(match.getEffectiveName() + ", " + phrase.toLowerCase()).queue();
             } else {
                 channel.sendMessage("No one found").queue();
             }
         } catch (UnirestException e) {
+            e.printStackTrace();
             return;
         }
     }

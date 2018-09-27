@@ -50,7 +50,7 @@ public class RecordCommand implements Command {
         channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
 
         this.jdbi.useHandle(handle -> {
-            handle.execute("create table if not exists Workouts (Workout varchar(100), Reps int, Weight int)");
+            handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Workout varchar(100), Reps int, Weight int)");
             handle.execute("insert into Workouts (Workout, Reps, Weight) values (?, ?, ?)", workoutNameCopy, repsCopy, weightCopy);
         });
     }

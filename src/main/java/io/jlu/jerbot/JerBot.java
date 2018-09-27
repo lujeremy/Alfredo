@@ -1,22 +1,14 @@
 package io.jlu.jerbot;
 
 import io.jlu.jerbot.commands.Command;
-import io.jlu.jerbot.commands.GiveTaskCommand;
+import io.jlu.jerbot.commands.ComplimentCommand;
 import io.jlu.jerbot.commands.RecordCommand;
 import io.jlu.jerbot.commands.RoastCommand;
-import io.jlu.jerbot.utils.JerBotUtils;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.security.auth.login.LoginException;
@@ -39,7 +31,7 @@ public class JerBot extends ListenerAdapter {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String token = br.readLine();
 
-        commandMap.put("givetask", new GiveTaskCommand());
+        commandMap.put("compliment", new ComplimentCommand());
         commandMap.put("roast", new RoastCommand());
         commandMap.put("record", new RecordCommand(jdbi));
         commandMap.put("hi", (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();});
