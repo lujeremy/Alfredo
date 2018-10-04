@@ -1,9 +1,6 @@
 package io.jlu.jerbot;
 
-import io.jlu.jerbot.commands.Command;
-import io.jlu.jerbot.commands.ComplimentCommand;
-import io.jlu.jerbot.commands.RecordCommand;
-import io.jlu.jerbot.commands.RoastCommand;
+import io.jlu.jerbot.commands.*;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -34,6 +31,7 @@ public class JerBot extends ListenerAdapter {
         commandMap.put("compliment", new ComplimentCommand());
         commandMap.put("roast", new RoastCommand());
         commandMap.put("record", new RecordCommand(jdbi));
+        commandMap.put("query", new QueryCommand(jdbi));
         commandMap.put("hi", (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();});
         commandMap.put("ahnee", (event, parameter) -> {event.getChannel().sendMessage("frick").queue();});
 
