@@ -20,7 +20,7 @@ public class JerBot extends ListenerAdapter {
     public static void main(String[] args) throws LoginException, IOException {
 
         String jdbcUrl = "jdbc:mysql://localhost:3306/workout";
-        Jdbi jdbi = Jdbi.create(jdbcUrl, "Jeremy", "9033");
+        Jdbi jdbi = Jdbi.create(jdbcUrl, "root", "9033");
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File("token.txt");
@@ -31,9 +31,9 @@ public class JerBot extends ListenerAdapter {
         commandMap.put("compliment", new ComplimentCommand());
         commandMap.put("roast", new RoastCommand());
         commandMap.put("record", new RecordCommand(jdbi));
-        commandMap.put("query", new QueryCommand(jdbi));
-        commandMap.put("hi", (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();});
-        commandMap.put("ahnee", (event, parameter) -> {event.getChannel().sendMessage("frick").queue();});
+        commandMap.put("show", new ShowCommand(jdbi));
+        commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
+        commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());

@@ -8,6 +8,7 @@ import io.jlu.jerbot.utils.JerBotUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,11 @@ public class ComplimentCommand implements Command {
         String contentRaw = event.getMessage().getContentRaw();
 
         try {
-            System.out.println("hi");
-            HttpResponse<String> jsonResponse = Unirest.get("http://compliment-api.herokuapp.com").asString();
-
-            System.out.println("hey");
-            String phrase = jsonResponse.getBody();
-            System.out.println(phrase);
+            HttpResponse<String> jsonResponse = Unirest.get("https://complimentr.com/api").asString();
+            String json = jsonResponse.getBody();
+            JSONObject jsonObj = new JSONObject(json);
+            String phrase = jsonObj.getString("compliment");
+//            System.out.println(phrase);
 
             if (contentRaw.length() < "compliment ".length() + 2) {
                 channel.sendMessage("You can't compliment air!").queue();

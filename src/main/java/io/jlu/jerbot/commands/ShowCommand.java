@@ -6,18 +6,17 @@ import org.jdbi.v3.core.Jdbi;
 
 import java.util.List;
 
-public class QueryCommand implements Command {
+public class ShowCommand implements Command {
 
     final private Jdbi jdbi;
 
-    public QueryCommand(Jdbi jdbi) {
+    public ShowCommand(Jdbi jdbi) {
         this.jdbi = jdbi;
     }
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
         MessageChannel channel = event.getChannel();
-        String contentRaw = event.getMessage().getContentRaw();
 
         List<String> workouts = this.jdbi.withHandle(handle ->
                 handle.createQuery("SELECT Workout FROM Workouts").mapTo(String.class).list());

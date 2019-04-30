@@ -16,7 +16,6 @@ public class RecordCommand implements Command {
     public void handleEvent(MessageReceivedEvent event, String parameter) {
         MessageChannel channel = event.getChannel();
         String contentRaw = event.getMessage().getContentRaw();
-        User author = event.getAuthor();
 
         String info = contentRaw.substring("roast ".length() + 1);
         String[] parsedInfo = info.split(" ");
@@ -33,9 +32,10 @@ public class RecordCommand implements Command {
 
             try {
                 int num = Integer.parseInt(parsedInfo[i]);
-                if (num <= 14) {
+                // First num you see will be reps, second num will be weight, any more will be silently ignored
+                if (reps == 0) {
                     reps = num;
-                } else {
+                } else if (weight == 0){
                     weight = num;
                 }
             } catch (NumberFormatException e) {
