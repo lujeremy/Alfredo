@@ -1,6 +1,7 @@
 package io.jlu.jerbot;
 
 import io.jlu.jerbot.commands.*;
+import io.jlu.jerbot.utils.JerBotUtils;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -34,6 +35,7 @@ public class JerBot extends ListenerAdapter {
         commandMap.put("show", new ShowCommand(jdbi));
         commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
         commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
+        commandMap.put("help", new HelpCommand(commandMap));
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());
@@ -69,7 +71,7 @@ public class JerBot extends ListenerAdapter {
             if (commandHandler != null) {
                 commandHandler.handleEvent(event, parameter);
             } else {
-                System.out.println("no command");
+                System.out.println("No existing command");
             }
         }
     }

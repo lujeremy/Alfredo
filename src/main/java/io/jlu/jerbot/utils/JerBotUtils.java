@@ -1,10 +1,13 @@
 package io.jlu.jerbot.utils;
 
+import io.jlu.jerbot.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JerBotUtils {
 
@@ -30,5 +33,38 @@ public class JerBotUtils {
         }
 
         return null;
+    }
+
+    public static Map<String, String> defineCommands(Map<String, Command> commandMap) {
+        Map<String, String> commandDefinitions = new HashMap<>();
+        for (String name : commandMap.keySet()) {
+
+            String definition = "";
+            switch(name) {
+                case "help":
+                    definition = "Repeats this message";
+                    break;
+                case "compliment":
+                    definition = "Sends a compliment to a user. e.g. !compliment Potato";
+                    break;
+                case "roast":
+                    definition = "Roasts a user. e.g. !roast Potato";
+                    break;
+                case "ahnee":
+                    definition = "frick";
+                    break;
+                case "hi":
+                    definition = "Say hello!";
+                    break;
+                case "record":
+                case "show":
+
+                default:
+            }
+            System.out.println("I just added: " + name + definition);
+            commandDefinitions.put(name, definition);
+        }
+
+        return commandDefinitions;
     }
 }
