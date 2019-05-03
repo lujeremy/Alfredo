@@ -53,7 +53,6 @@ public class JerBot extends ListenerAdapter {
         );
 
         String contentRaw = event.getMessage().getContentRaw();
-
         if (contentRaw == null || contentRaw.length() == 0) {
             return;
         }
@@ -61,10 +60,10 @@ public class JerBot extends ListenerAdapter {
         String[] contentArr = contentRaw.split(" ", 2);
         String command = contentArr[0].substring(1).toLowerCase();
         String parameter = "";
+
         if (contentArr.length > 1) {
             parameter = contentArr[1].toLowerCase();
         }
-
         if (contentRaw.startsWith("!")) {
             Command commandHandler = commandMap.get(command);
 

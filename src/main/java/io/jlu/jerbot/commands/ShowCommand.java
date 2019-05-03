@@ -1,5 +1,6 @@
 package io.jlu.jerbot.commands;
 
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.jdbi.v3.core.Jdbi;
@@ -18,11 +19,16 @@ public class ShowCommand implements Command {
     public void handleEvent(MessageReceivedEvent event, String parameter) {
         MessageChannel channel = event.getChannel();
 
-        List<String> workouts = this.jdbi.withHandle(handle ->
-                handle.createQuery("SELECT Workout FROM Workouts").mapTo(String.class).list());
+        try {
+            List<String> workouts = this.jdbi.withHandle(handle ->
+                    handle.createQuery("SELECT Workout FROM Workouts").mapTo(String.class).list());
 
-        for (int i = 0; i < workouts.size(); i++) {
-            channel.sendMessage("Recorded Workout: " + workouts.get(i)).queue();
+            for (int i = 0; i < workouts.size(); i++) {
+                channel.sendMessage("Recorded Workout: " + workouts.get(i)).queue();
+            }
+        } catch (Exception e) {
+            channel.sendMessage("That didn't quite hit the spot, something went wrong with the database.").queue();
+
         }
     }
 }

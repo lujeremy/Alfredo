@@ -1,4 +1,5 @@
 package io.jlu.jerbot.commands;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -29,7 +30,6 @@ public class RecordCommand implements Command {
         int weight = 0;
 
         for (int i = 0; i < parsedInfo.length; i++) {
-
             try {
                 int num = Integer.parseInt(parsedInfo[i]);
                 // First num you see will be reps, second num will be weight, any more will be silently ignored
@@ -48,11 +48,16 @@ public class RecordCommand implements Command {
         final int weightCopy = weight;
         final long time = System.currentTimeMillis();
 
-        channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
+        try {
+            this.jdbi.useHandle(handle -> {
+                handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Time long, Workout varchar(100), Reps int, Weight int)");
+                handle.execute("insert into Workouts (Time, Workout, Reps, Weight) values (?, ?, ?, ?)", time, workoutNameCopy, repsCopy, weightCopy);
+            });
 
-        this.jdbi.useHandle(handle -> {
-            handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Time long, Workout varchar(100), Reps int, Weight int)");
-            handle.execute("insert into Workouts (Time, Workout, Reps, Weight) values (?, ?, ?, ?)", time, workoutNameCopy, repsCopy, weightCopy);
-        });
+            channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
+        } catch (Exception e) {
+            channel.sendMessage("That didn't quite hit the spot, something went wrong with the database.").queue();
+        }
+
     }
 }

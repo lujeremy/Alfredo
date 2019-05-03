@@ -47,7 +47,6 @@ public class ComplimentCommand implements Command {
             }
         } catch (UnirestException e) {
             e.printStackTrace();
-            return;
         }
     }
 }
