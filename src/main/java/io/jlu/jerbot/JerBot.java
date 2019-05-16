@@ -64,6 +64,7 @@ public class JerBot extends ListenerAdapter {
         if (contentArr.length > 1) {
             parameter = contentArr[1].toLowerCase();
         }
+
         if (contentRaw.startsWith("!")) {
             Command commandHandler = commandMap.get(command);
 
