@@ -1,7 +1,6 @@
 package io.jlu.jerbot.commands;
-import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.jdbi.v3.core.Jdbi;
 
