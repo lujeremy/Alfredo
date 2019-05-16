@@ -1,13 +1,10 @@
 package io.jlu.jerbot.utils;
 
-import io.jlu.jerbot.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JerBotUtils {
 

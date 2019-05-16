@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class JerBot extends ListenerAdapter {
 
-    static Map<String, Command> commandMap = new HashMap<>();
+    private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
 
