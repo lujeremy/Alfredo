@@ -13,22 +13,20 @@ public class JerBotUtils {
 
         if (event.getGuild() != null) {
             memberList = event.getGuild().getMembersByName(target, true);
-
             if (memberList.isEmpty()) {
                 memberList = event.getGuild().getMembersByNickname(target,true);
             }
         }
-
         return memberList;
     }
 
     // Get first matching members method goes here
     public static Member getFirstMatchingMember(String target, MessageReceivedEvent event) {
         List<Member> memberList = getMatchingMembers(target, event);
+
         if (!memberList.isEmpty()) {
             return memberList.get(0);
         }
-
         return null;
     }
 }

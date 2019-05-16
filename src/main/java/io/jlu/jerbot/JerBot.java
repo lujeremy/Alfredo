@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class JerBot extends ListenerAdapter {
 
-    static Map<String, Command> commandMap = new HashMap<>();
+    private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
 
         String jdbcUrl = "jdbc:mysql://localhost:3306/workout";
-        Jdbi jdbi = Jdbi.create(jdbcUrl, "Jeremy", "9033");
+        Jdbi jdbi = Jdbi.create(jdbcUrl, "root", "9033");
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File("token.txt");
@@ -31,9 +31,10 @@ public class JerBot extends ListenerAdapter {
         commandMap.put("compliment", new ComplimentCommand());
         commandMap.put("roast", new RoastCommand());
         commandMap.put("record", new RecordCommand(jdbi));
-        commandMap.put("query", new QueryCommand(jdbi));
-        commandMap.put("hi", (event, parameter) -> {event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue();});
-        commandMap.put("ahnee", (event, parameter) -> {event.getChannel().sendMessage("frick").queue();});
+        commandMap.put("show", new ShowCommand(jdbi));
+        commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
+        commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
+        commandMap.put("help", new HelpCommand());
 
         builder.setToken(token);
         builder.addEventListener(new JerBot());
@@ -51,7 +52,6 @@ public class JerBot extends ListenerAdapter {
         );
 
         String contentRaw = event.getMessage().getContentRaw();
-
         if (contentRaw == null || contentRaw.length() == 0) {
             return;
         }
@@ -59,6 +59,7 @@ public class JerBot extends ListenerAdapter {
         String[] contentArr = contentRaw.split(" ", 2);
         String command = contentArr[0].substring(1).toLowerCase();
         String parameter = "";
+
         if (contentArr.length > 1) {
             parameter = contentArr[1].toLowerCase();
         }
@@ -69,7 +70,7 @@ public class JerBot extends ListenerAdapter {
             if (commandHandler != null) {
                 commandHandler.handleEvent(event, parameter);
             } else {
-                System.out.println("no command");
+                System.out.println("No existing command");
             }
         }
     }
