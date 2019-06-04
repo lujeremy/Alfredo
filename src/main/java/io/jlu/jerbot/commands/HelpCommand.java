@@ -23,7 +23,7 @@ public class HelpCommand implements Command {
         commandDefinitions.put("roast", "Roasts a user. e.g. !roast Potato");
         commandDefinitions.put("ahnee", "frick");
         commandDefinitions.put("hi", "Say hello!");
-        commandDefinitions.put("record", "Record your workout. Format is 'workout reps weight,' e.g. Bench press 5 100");
+        commandDefinitions.put("record", "Record your workout. Format is 'workout sets reps weight,' e.g. Bench press 4 5 100");
         commandDefinitions.put("show", "Shows all of the workouts you've recorded thus far");
     }
 

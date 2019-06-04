@@ -18,14 +18,17 @@ public class JerBot extends ListenerAdapter {
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
+        File file = new File("credentials.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
 
-        String jdbcUrl = "jdbc:mysql://localhost:3306/workout";
-        Jdbi jdbi = Jdbi.create(jdbcUrl, "root", "9033");
+        String jdbcUrl = br.readLine();
+        Jdbi jdbi = Jdbi.create(jdbcUrl, br.readLine(), br.readLine());
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        File file = new File("token.txt");
+        file = new File("token.txt");
+        br = new BufferedReader(new FileReader(file));
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
+
         String token = br.readLine();
 
         commandMap.put("compliment", new ComplimentCommand());

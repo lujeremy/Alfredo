@@ -25,14 +25,17 @@ public class RecordCommand implements Command {
         }
 
         String workoutName = "";
+        int sets = 0;
         int reps = 0;
         int weight = 0;
 
         for (int i = 0; i < parsedInfo.length; i++) {
             try {
                 int num = Integer.parseInt(parsedInfo[i]);
-                // First num you see will be reps, second num will be weight, any more will be silently ignored
-                if (reps == 0) {
+                // First num you see will be sets, then reps, then weight. Any more will be silently ignored
+                if (sets == 0) {
+                    sets = num;
+                } else if (reps == 0) {
                     reps = num;
                 } else if (weight == 0){
                     weight = num;
@@ -42,20 +45,23 @@ public class RecordCommand implements Command {
             }
         }
 
+        workoutName = workoutName.toLowerCase();
         final String workoutNameCopy = workoutName;
+        final int setsCopy = sets;
         final int repsCopy = reps;
         final int weightCopy = weight;
         final long time = System.currentTimeMillis();
 
         try {
             this.jdbi.useHandle(handle -> {
-                handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Time long, Workout varchar(100), Reps int, Weight int)");
-                handle.execute("insert into Workouts (Time, Workout, Reps, Weight) values (?, ?, ?, ?)", time, workoutNameCopy, repsCopy, weightCopy);
+                handle.execute("create table if not exists Workouts (ID int NOT NULL AUTO_INCREMENT primary key, Time long, Workout varchar(100), Sets int, Reps int, Weight int)");
+                handle.execute("insert into Workouts (Time, Workout, Reps, Weight) values (?, ?, ?, ?)", time, workoutNameCopy, setsCopy, repsCopy, weightCopy);
             });
 
-            channel.sendMessage("Recorded Workout: " + workoutName + ", " + "Reps: " + reps + ", Weight: " + weight + ".").queue();
+            channel.sendMessage("Recorded Workout: " + workoutName + ", Sets: " + sets + ", Reps: " + reps + ", Weight: " + weight + ".").queue();
         } catch (Exception e) {
             channel.sendMessage("That didn't quite hit the spot, something went wrong with the database.").queue();
+            e.printStackTrace();
         }
 
     }

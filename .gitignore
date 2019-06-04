@@ -17,6 +17,7 @@ target/
 .idea/vcs.xml
 .idea/sbt.xml
 token.txt
+credentials.txt
 .idea/.name
 
 # Sensitive or high-churn files
