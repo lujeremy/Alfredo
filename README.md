@@ -1,4 +1,4 @@
-# JerBot
+# Alfredo
 
 A Java-based Discord Bot
 
@@ -6,7 +6,9 @@ A Java-based Discord Bot
 
 Download project
 
-Provide Bot Token in a token.txt in /JerBot
+Provide Bot Token in a token.txt
+
+Provide database information in a credentials.txt
 
 Run an Application Config-- running an install Maven Config before launch
 

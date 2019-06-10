@@ -1,4 +1,4 @@
-package io.jlu.jerbot.utils;
+package io.jlu.alfredo.utils;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JerBotUtils {
+public class AlfredoUtils {
 
     public static List<Member> getMatchingMembers(String target, MessageReceivedEvent event) {
         List<Member> memberList = new ArrayList<>();

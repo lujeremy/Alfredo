@@ -1,9 +1,9 @@
-package io.jlu.jerbot.commands;
+package io.jlu.alfredo.commands;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import io.jlu.jerbot.utils.JerBotUtils;
+import io.jlu.alfredo.utils.AlfredoUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -29,7 +29,7 @@ public class RoastCommand implements Command {
             }
 
             String target = contentRaw.substring("roast ".length() + 1);
-            Member match = JerBotUtils.getFirstMatchingMember(target, event);
+            Member match = AlfredoUtils.getFirstMatchingMember(target, event);
 
             if (match != null) {
                 channel.sendMessage(match.getEffectiveName() + ", " + phrase.toLowerCase()).queue();

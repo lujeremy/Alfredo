@@ -1,11 +1,14 @@
-package io.jlu.jerbot;
+package io.jlu.alfredo;
 
-import io.jlu.jerbot.commands.*;
+import io.jlu.alfredo.commands.*;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.security.auth.login.LoginException;
@@ -13,11 +16,16 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JerBot extends ListenerAdapter {
+public class Alfredo extends ListenerAdapter {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
+
+        // Logger setup
+        BasicConfigurator.configure();
+
         File file = new File("credentials.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -40,7 +48,7 @@ public class JerBot extends ListenerAdapter {
         commandMap.put("help", new HelpCommand());
 
         builder.setToken(token);
-        builder.addEventListener(new JerBot());
+        builder.addEventListener(new Alfredo());
 
         builder.build();
     }
@@ -49,7 +57,7 @@ public class JerBot extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         User author = event.getAuthor();
 
-        System.out.println("We received a message from " +
+        logger.info("We received a message from " +
                 author.getName() + ": " +
                 event.getMessage().getContentDisplay()
         );
@@ -73,7 +81,7 @@ public class JerBot extends ListenerAdapter {
             if (commandHandler != null) {
                 commandHandler.handleEvent(event, parameter);
             } else {
-                System.out.println("No existing command");
+                logger.warn("No existing command");
             }
         }
     }
