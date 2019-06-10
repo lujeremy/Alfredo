@@ -6,8 +6,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jdbi.v3.core.Jdbi;
 
@@ -22,9 +20,6 @@ public class Alfredo extends ListenerAdapter {
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
-
-        // Logger setup
-        BasicConfigurator.configure();
 
         File file = new File("credentials.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
