@@ -10,7 +10,13 @@ Provide Bot Token in a token.txt
 
 Provide database information in a credentials.txt
 
-Run an Application Config-- running an install Maven Config before launch
+Run an Application Config-- install Maven Config before launch
+
+## Related Projects
+
+* AlfredoRest: RESTful API that the frontend interfaces with
+  * [API Link](alfredobot.com/api) and [Github Project](github.com/lujeremy/alfredorest)
+* alfredo-dash: Web dashboard for tracking and visualizing stored workout data, built with Vue (Work-in-progress)
 
 ## Built With
 
