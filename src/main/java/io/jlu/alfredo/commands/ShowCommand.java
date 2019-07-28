@@ -1,8 +1,7 @@
 package io.jlu.alfredo.commands;
 
-import io.jlu.alfredo.Datatypes.Workout;
+import io.jlu.alfredo.datatypes.Workout;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.jdbi.v3.core.Jdbi;
@@ -33,17 +32,15 @@ public class ShowCommand implements Command {
             EmbedBuilder workoutsEmbed = new EmbedBuilder();
 
             //TODO: This stuff needs to ideally go into some config file somewhere
-            Member umaru = event.getGuild().getMemberById(482570873002262538L);
             workoutsEmbed.setTitle("Recorded Workouts <:TohruPoint:507804401436459008>");
             workoutsEmbed.setThumbnail(event.getAuthor().getAvatarUrl());
-            workoutsEmbed.setAuthor(umaru.getNickname(), "", umaru.getUser().getAvatarUrl());
             workoutsEmbed.setColor(new Color(126, 249, 255));
 
-            if (workouts.size() == 0) {
-                workoutsEmbed.setTitle("Something went wrong");
+            if (workouts.isEmpty()) {
+                workoutsEmbed.setTitle("You have no workouts recorded, record a workout with !record.");
             }
 
-            workouts.forEach((workout) -> workoutsEmbed.addField("", workout.toString(), false));
+            workouts.forEach((workout) -> workoutsEmbed.addField(workout.getWorkout(), workout.getDetailString(), false));
             channel.sendMessage(workoutsEmbed.build()).queue();
         } catch (Exception e) {
             channel.sendMessage("Something went wrong but it isn't your fault!").queue();

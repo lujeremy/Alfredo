@@ -36,7 +36,7 @@ public class HelpCommand implements Command {
         EmbedBuilder helpEmbed = new EmbedBuilder();
 
         //TODO: This stuff needs to ideally go into some config file somewhere
-        helpEmbed.setTitle("Alfredo's Abilities");
+        helpEmbed.setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>");
         helpEmbed.setThumbnail(event.getAuthor().getAvatarUrl());
         helpEmbed.setColor(new Color(255, 105, 18));
 

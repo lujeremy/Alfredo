@@ -15,9 +15,9 @@ public class AlfredoUtils {
         if (event.getGuild() != null) {
             Member matchingMember = event.getGuild().getMembers()
                     .stream()
-                    .filter((member) -> member.getEffectiveName().equalsIgnoreCase(target) || member.getNickname().equalsIgnoreCase(target))
-                    .limit(1)
-                    .reduce(null, (ans, i) -> i);
+                    .filter((member) -> target.equalsIgnoreCase(member.getUser().getName()) || target.equalsIgnoreCase(member.getNickname()))
+                    .findFirst()
+                    .orElse(null);
             return matchingMember;
         }
 
