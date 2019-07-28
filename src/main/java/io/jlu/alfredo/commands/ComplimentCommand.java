@@ -24,7 +24,6 @@ public class ComplimentCommand implements Command {
             JSONObject jsonObj = Unirest.get("https://complimentr.com/api").asJson().getBody().getObject();
 
             String phrase = jsonObj.getString("compliment");
-//            System.out.println(phrase);
 
             if (contentRaw.length() < "compliment ".length() + 2) {
                 channel.sendMessage("You can't compliment air!").queue();

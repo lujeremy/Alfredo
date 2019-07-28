@@ -1,7 +1,9 @@
 package io.jlu.alfredo.commands;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +15,9 @@ public class HelpCommand implements Command {
         defineCommands();
     }
 
-    public HelpCommand() {}
+    public HelpCommand() {
+
+    }
 
     private static void defineCommands() {
         commandDefinitions = new HashMap<>();
@@ -29,11 +33,16 @@ public class HelpCommand implements Command {
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
-        StringBuffer message = new StringBuffer("```");
-        for (String name : commandDefinitions.keySet()) {
-            String definition = commandDefinitions.get(name);
-            message.append("\n!" + name + ": " + definition);
-        }
-        event.getChannel().sendMessage(message.append("```").toString()).queue();
+        EmbedBuilder helpEmbed = new EmbedBuilder();
+
+        //TODO: This stuff needs to ideally go into some config file somewhere
+        helpEmbed.setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>");
+        helpEmbed.setThumbnail(event.getAuthor().getAvatarUrl());
+        helpEmbed.setColor(new Color(255, 105, 18));
+
+        commandDefinitions
+                .forEach((name, definition) -> helpEmbed.addField("!" + name + ":", definition, false));
+
+        event.getChannel().sendMessage(helpEmbed.build()).queue();
     }
 }
