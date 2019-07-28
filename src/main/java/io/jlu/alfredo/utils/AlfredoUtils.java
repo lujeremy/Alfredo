@@ -3,30 +3,24 @@ package io.jlu.alfredo.utils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AlfredoUtils {
 
-    public static List<Member> getMatchingMembers(String target, MessageReceivedEvent event) {
-        List<Member> memberList = new ArrayList<>();
-
-        if (event.getGuild() != null) {
-            memberList = event.getGuild().getMembersByName(target, true);
-            if (memberList.isEmpty()) {
-                memberList = event.getGuild().getMembersByNickname(target,true);
-            }
-        }
-        return memberList;
-    }
-
-    // Get first matching members method goes here
+    /**
+     * Gets the first matching member of in a server
+     * @param target name String to match members list against
+     * @param event event trigger
+     * @return a member that matches the String, null otherwise
+     */
     public static Member getFirstMatchingMember(String target, MessageReceivedEvent event) {
-        List<Member> memberList = getMatchingMembers(target, event);
-
-        if (!memberList.isEmpty()) {
-            return memberList.get(0);
+        if (event.getGuild() != null) {
+            Member matchingMember = event.getGuild().getMembers()
+                    .stream()
+                    .filter((member) -> member.getEffectiveName().equalsIgnoreCase(target) || member.getNickname().equalsIgnoreCase(target))
+                    .limit(1)
+                    .reduce(null, (ans, i) -> i);
+            return matchingMember;
         }
+
         return null;
     }
 }
