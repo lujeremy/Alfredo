@@ -10,10 +10,6 @@ import org.json.JSONObject;
 
 public class ComplimentCommand implements Command {
 
-    public ComplimentCommand() {
-
-    }
-
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
 

@@ -10,10 +10,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class RoastCommand implements Command {
 
-    public RoastCommand() {
-
-    }
-
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
         MessageChannel channel = event.getChannel();
