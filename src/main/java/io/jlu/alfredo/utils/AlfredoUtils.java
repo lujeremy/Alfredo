@@ -3,6 +3,8 @@ package io.jlu.alfredo.utils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.util.Random;
+
 public class AlfredoUtils {
 
     /**
@@ -22,5 +24,14 @@ public class AlfredoUtils {
         }
 
         return null;
+    }
+
+    public static String getRandomPokemonSprite() {
+        Random rand = new Random();
+
+        // Current pokemon ID goes up from [1 - 802]
+        int id = rand.nextInt(802) + 1;
+
+        return "https://pokeres.bastionbot.org/images/pokemon/" + Integer.toString(id) + ".png";
     }
 }

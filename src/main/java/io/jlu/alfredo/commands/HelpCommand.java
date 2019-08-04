@@ -33,12 +33,10 @@ public class HelpCommand implements Command {
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
-        EmbedBuilder helpEmbed = new EmbedBuilder();
-
-        //TODO: This stuff needs to ideally go into some config file somewhere
-        helpEmbed.setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>");
-        helpEmbed.setThumbnail(event.getAuthor().getAvatarUrl());
-        helpEmbed.setColor(new Color(255, 105, 18));
+        EmbedBuilder helpEmbed = new EmbedBuilder()
+            .setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>")
+            .setThumbnail(event.getAuthor().getAvatarUrl())
+            .setColor(new Color(255, 105, 18));
 
         commandDefinitions
                 .forEach((name, definition) -> helpEmbed.addField("!" + name + ":", definition, false));

@@ -1,6 +1,8 @@
 package io.jlu.alfredo;
 
 import io.jlu.alfredo.commands.*;
+import kong.unirest.JacksonObjectMapper;
+import kong.unirest.Unirest;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -31,6 +33,8 @@ public class Alfredo extends ListenerAdapter {
         file = new File("token.txt");
         br = new BufferedReader(new FileReader(file));
 
+        // Set up objectmapper for Unirest
+        Unirest.config().setObjectMapper(new JacksonObjectMapper());
 
         String token = br.readLine();
 
@@ -38,6 +42,7 @@ public class Alfredo extends ListenerAdapter {
         commandMap.put("roast", new RoastCommand());
         commandMap.put("record", new RecordCommand(jdbi));
         commandMap.put("show", new ShowCommand(jdbi));
+        commandMap.put("nature", new NatureCommand());
         commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
         commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
         commandMap.put("help", new HelpCommand());
