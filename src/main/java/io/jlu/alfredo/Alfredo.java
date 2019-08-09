@@ -6,17 +6,19 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.apache.log4j.Logger;
 import org.jdbi.v3.core.Jdbi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Alfredo extends ListenerAdapter {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
@@ -53,7 +55,7 @@ public class Alfredo extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         User author = event.getAuthor();
 
-        logger.info("We received a message from " +
+        LOG.info("We received a message from " +
                 author.getName() + ": " +
                 event.getMessage().getContentDisplay()
         );
@@ -77,7 +79,7 @@ public class Alfredo extends ListenerAdapter {
             if (commandHandler != null) {
                 commandHandler.handleEvent(event, parameter);
             } else {
-                logger.warn("No existing command");
+                LOG.warn("No existing command");
             }
         }
     }

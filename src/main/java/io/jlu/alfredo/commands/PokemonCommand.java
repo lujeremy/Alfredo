@@ -6,14 +6,17 @@ import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Random;
 
 public class PokemonCommand implements Command {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
@@ -36,8 +39,8 @@ public class PokemonCommand implements Command {
                 .ifFailure(response -> {
                     event.getChannel().sendMessage("Oh no! Status " + response.getStatus() + ". Please check your spelling").queue();
                     response.getParsingError().ifPresent(e -> {
-                        logger.error("Parsing Exception: ", e);
-                        logger.error("Original body: " + e.getOriginalBody());
+                        LOG.error("Parsing Exception: ", e);
+                        LOG.error("Original body: " + e.getOriginalBody());
                     });
                 });
     }
@@ -48,16 +51,25 @@ public class PokemonCommand implements Command {
         String name = AlfredoUtils.capitalizeFirst(jsonObject.getString("name"));
         String id = Integer.toString(jsonObject.getInt("id"));
 
-        // TODO: this entire block is too verbose
         String mainType;
         String subType;
-        if (jsonObject.getJSONArray("types").length() == 1) {
-            mainType = AlfredoUtils.capitalizeFirst(jsonObject.getJSONArray("types").getJSONObject(0).getJSONObject("type").getString("name"));
+        JSONArray typesArray = jsonObject.getJSONArray("types");
+        if (typesArray.length() == 1) {
+            mainType = AlfredoUtils.capitalizeFirst(
+                    typesArray.getJSONObject(0)
+                            .getJSONObject("type")
+                            .getString("name"));
             subType = null;
         } else {
             // If there are two types, the main type is actually placed on the second slot of array
-            mainType = AlfredoUtils.capitalizeFirst(jsonObject.getJSONArray("types").getJSONObject(1).getJSONObject("type").getString("name"));
-            subType = AlfredoUtils.capitalizeFirst(jsonObject.getJSONArray("types").getJSONObject(0).getJSONObject("type").getString("name"));
+            mainType = AlfredoUtils.capitalizeFirst(
+                    typesArray.getJSONObject(1)
+                            .getJSONObject("type")
+                            .getString("name"));
+            subType = AlfredoUtils.capitalizeFirst(
+                    typesArray.getJSONObject(0)
+                            .getJSONObject("type")
+                            .getString("name"));
         }
 
         String joinedType;

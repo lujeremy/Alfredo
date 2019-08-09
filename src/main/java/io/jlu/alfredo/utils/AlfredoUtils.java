@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class AlfredoUtils {
 
-    private static Map<String, String> pokemonTypeColors;
+    private static Map<String, Color> pokemonTypeColors;
 
     static {
         defineColors();
@@ -35,7 +35,6 @@ public class AlfredoUtils {
     }
 
     public static String getPokemonImageUrl(String id) {
-        // TODO: How safe is this...?
         return "https://pokeres.bastionbot.org/images/pokemon/" + id + ".png";
     }
 
@@ -44,29 +43,29 @@ public class AlfredoUtils {
     }
 
     public static Color getColor(String pokemonType) {
-        return Color.decode(pokemonTypeColors.get(pokemonType.toLowerCase()));
+        return pokemonTypeColors.get(pokemonType.toLowerCase());
     }
 
     private static void defineColors() {
         pokemonTypeColors = new HashMap<>();
 
-        pokemonTypeColors.put("normal", "#A8A878");
-        pokemonTypeColors.put("fighting", "#C03028");
-        pokemonTypeColors.put("flying", "#A890F0");
-        pokemonTypeColors.put("poison", "#A040A0");
-        pokemonTypeColors.put("ground", "#E0C068");
-        pokemonTypeColors.put("rock", "#B8A038");
-        pokemonTypeColors.put("bug", "#A8B820");
-        pokemonTypeColors.put("ghost", " #705898");
-        pokemonTypeColors.put("steel", "#B8B8D0");
-        pokemonTypeColors.put("fire", "#F08030");
-        pokemonTypeColors.put("water", "#6890F0");
-        pokemonTypeColors.put("grass", "#78C850");
-        pokemonTypeColors.put("electric", " #F8D030");
-        pokemonTypeColors.put("psychic", "#F85888");
-        pokemonTypeColors.put("ice", "#98D8D8");
-        pokemonTypeColors.put("dragon", "#7038F8");
-        pokemonTypeColors.put("dark", "#705848");
-        pokemonTypeColors.put("fairy", "#EE99AC");
+        pokemonTypeColors.put("normal", Color.decode("#A8A878"));
+        pokemonTypeColors.put("fighting", Color.decode("#C03028"));
+        pokemonTypeColors.put("flying", Color.decode("#A890F0"));
+        pokemonTypeColors.put("poison", Color.decode("#A040A0"));
+        pokemonTypeColors.put("ground", Color.decode("#E0C068"));
+        pokemonTypeColors.put("rock", Color.decode("#B8A038"));
+        pokemonTypeColors.put("bug", Color.decode("#A8B820"));
+        pokemonTypeColors.put("ghost", Color.decode("#705898"));
+        pokemonTypeColors.put("steel", Color.decode("#B8B8D0"));
+        pokemonTypeColors.put("fire", Color.decode("#F08030"));
+        pokemonTypeColors.put("water", Color.decode("#6890F0"));
+        pokemonTypeColors.put("grass", Color.decode("#78C850"));
+        pokemonTypeColors.put("electric", Color.decode("#F8D030"));
+        pokemonTypeColors.put("psychic", Color.decode("#F85888"));
+        pokemonTypeColors.put("ice", Color.decode("#98D8D8"));
+        pokemonTypeColors.put("dragon", Color.decode("#7038F8"));
+        pokemonTypeColors.put("dark", Color.decode("#705848"));
+        pokemonTypeColors.put("fairy", Color.decode("#EE99AC"));
     }
 }
