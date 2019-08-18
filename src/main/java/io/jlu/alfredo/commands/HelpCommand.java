@@ -27,18 +27,21 @@ public class HelpCommand implements Command {
         commandDefinitions.put("roast", "Roasts a user. e.g. !roast Potato");
         commandDefinitions.put("ahnee", "frick");
         commandDefinitions.put("hi", "Say hello!");
-        commandDefinitions.put("record", "Record your workout. Format is 'workout sets reps weight,' e.g. Bench press 4 5 100");
+        commandDefinitions.put("pokemon", "Generates a random pokemon, or a pokemon of your choice." +
+                " e.g. !pokemon; !pokemon clefable");
+        commandDefinitions.put("nature", "Shows a list of natures or how a given nature affects a Pokemon's stat growth." +
+                " e.g. !nature; !nature bold");
+        commandDefinitions.put("record", "Record your workout. Format is 'workout sets reps weight,'" +
+                " e.g. Bench press 4 5 100");
         commandDefinitions.put("show", "Shows all of the workouts you've recorded thus far");
     }
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
-        EmbedBuilder helpEmbed = new EmbedBuilder();
-
-        //TODO: This stuff needs to ideally go into some config file somewhere
-        helpEmbed.setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>");
-        helpEmbed.setThumbnail(event.getAuthor().getAvatarUrl());
-        helpEmbed.setColor(new Color(255, 105, 18));
+        EmbedBuilder helpEmbed = new EmbedBuilder()
+            .setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>")
+            .setThumbnail(event.getAuthor().getAvatarUrl())
+            .setColor(new Color(255, 105, 18));
 
         commandDefinitions
                 .forEach((name, definition) -> helpEmbed.addField("!" + name + ":", definition, false));
