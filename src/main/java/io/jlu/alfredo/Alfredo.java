@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class Alfredo extends ListenerAdapter {
 
-    private final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
@@ -55,7 +55,7 @@ public class Alfredo extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         User author = event.getAuthor();
 
-        LOG.info("We received a message from " +
+        LOGGER.info("We received a message from " +
                 author.getName() + ": " +
                 event.getMessage().getContentDisplay()
         );
@@ -79,7 +79,7 @@ public class Alfredo extends ListenerAdapter {
             if (commandHandler != null) {
                 commandHandler.handleEvent(event, parameter);
             } else {
-                LOG.warn("No existing command");
+                LOGGER.warn("No existing command");
             }
         }
     }

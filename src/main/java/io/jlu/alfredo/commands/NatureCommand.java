@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 
 public class NatureCommand implements Command {
 
-    private Map<String, MessageEmbed> natureCache = new HashMap<>();
-    private final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private Map<String, JSONObject> natureCache = new HashMap<>();
+    private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
@@ -36,73 +36,71 @@ public class NatureCommand implements Command {
     }
 
     private void listAllNatures(MessageReceivedEvent event) {
-        MessageEmbed embed = natureCache.get("");
-        if (embed == null) {
+        JSONObject responseObject = natureCache.get("");
+
+        // If not in cache, try to fetch from api and insert into cache
+        if (responseObject == null) {
             try {
-                JSONArray natureArray = Unirest.get("https://pokeapi.co/api/v2/nature/")
-                        .asJson().getBody().getObject().getJSONArray("results");
-
-                String[] myArray = new String[natureArray.length()];
-                for (int i = 0; i < natureArray.length(); i++) {
-                    myArray[i] = natureArray.getJSONObject(i).getString("name");
-                }
-
-                String allNatures = Arrays.stream(myArray)
-                        .map(AlfredoUtils::capitalizeFirst)
-                        .sorted()
-                        .collect(Collectors.joining(", "));
-                EmbedBuilder builder = new EmbedBuilder().addField("List of Natures:", allNatures, false);
-
-                natureCache.put("", builder.build());
-                event.getChannel().sendMessage( builder.build()).queue();
+                responseObject = Unirest.get("https://pokeapi.co/api/v2/nature/").asJson().getBody().getObject();
+                natureCache.put("", responseObject);
             } catch (UnirestException e) {
                 e.printStackTrace();
             }
         } else {
-            LOG.info("Cache used!");
-            event.getChannel().sendMessage(embed).queue();
+            LOGGER.info("Cache used!");
         }
+
+        // If fetching is successful, process and build embed. If it failed, do nothing.
+        if (responseObject != null) {
+            JSONArray natureArray = responseObject.getJSONArray("results");
+
+            String[] myArray = new String[natureArray.length()];
+            for (int i = 0; i < natureArray.length(); i++) {
+                myArray[i] = natureArray.getJSONObject(i).getString("name");
+            }
+
+            String allNatures = Arrays.stream(myArray)
+                    .map(AlfredoUtils::capitalizeFirst)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+            EmbedBuilder builder = new EmbedBuilder().addField("List of Natures:", allNatures, false);
+            event.getChannel().sendMessage(builder.build()).queue();
+        }
+
     }
 
     private void describeTargetNature(MessageReceivedEvent event, String contentRaw) {
         String targetNature = contentRaw.split(" ")[1];
 
-        MessageEmbed embed = natureCache.get(targetNature);
-        if (embed == null) {
-            Unirest.get("https://pokeapi.co/api/v2/nature/{targetNature}")
-                    .routeParam("targetNature", targetNature)
-                    .asJson()
-                    .ifSuccess(response -> processSuccess(event, response))
-                    .ifFailure(response -> {
-                        LOG.error("Oh No! Status " + response.getStatus());
-                        event.getChannel().sendMessage("Oh No! Status " + response.getStatus() + ". Please check your spelling").queue();
-                        response.getParsingError().ifPresent(e -> {
-                            LOG.error("Parsing Exception: ", e);
-                            LOG.error("Original body: " + e.getOriginalBody());
-                        });
-                    });
+        JSONObject responseObject = natureCache.get(targetNature);
+
+        if (responseObject == null) {
+            try {
+                responseObject =  Unirest.get("https://pokeapi.co/api/v2/nature/{targetNature}")
+                        .routeParam("targetNature", targetNature)
+                        .asJson().getBody().getObject();
+                natureCache.put(targetNature, responseObject);
+            } catch (UnirestException e) {
+                e.printStackTrace();
+            }
         } else {
-            LOG.info("Cache used!");
-            event.getChannel().sendMessage(embed).queue();
+            LOGGER.info("Cache used!");
         }
-    }
 
-    private void processSuccess(MessageReceivedEvent event, HttpResponse<JsonNode> jsonResponse) {
-        JSONObject jsonObject = jsonResponse.getBody().getObject();
+        if (responseObject != null) {
+            // Retrieve the two stats we care about-- increase/decreased stat
+            String name = AlfredoUtils.capitalizeFirst(responseObject.getString("name"));
+            String increased = responseObject.getJSONObject("increased_stat").getString("name");
+            String decreased = responseObject.getJSONObject("decreased_stat").getString("name");
+            String japaneseName = responseObject.getJSONArray("names").getJSONObject(0).getString("name");
 
-        // Retrieve the two stats we care about-- increase/decreased stat
-        String name = AlfredoUtils.capitalizeFirst(jsonObject.getString("name"));
-        String increased = jsonObject.getJSONObject("increased_stat").getString("name");
-        String decreased = jsonObject.getJSONObject("decreased_stat").getString("name");
-        String japaneseName = jsonObject.getJSONArray("names").getJSONObject(0).getString("name");
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setTitle(name)
+                    .addField("Japanese Name: ", japaneseName, false)
+                    .addField("Increased Stat: ", increased, true)
+                    .addField("Decreased Stat: ", decreased, true);
 
-        EmbedBuilder builder = new EmbedBuilder()
-                .setTitle(name)
-                .addField("Japanese Name: ", japaneseName, false)
-                .addField("Increased Stat: ", increased, true)
-                .addField("Decreased Stat: ", decreased, true);
-
-        natureCache.put(name.toLowerCase(), builder.build());
-        event.getChannel().sendMessage(builder.build()).queue();
+            event.getChannel().sendMessage(builder.build()).queue();
+        }
     }
 }

@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class PokemonCommand implements Command {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public void handleEvent(MessageReceivedEvent event, String parameter) {
@@ -39,8 +39,8 @@ public class PokemonCommand implements Command {
                 .ifFailure(response -> {
                     event.getChannel().sendMessage("Oh no! Status " + response.getStatus() + ". Please check your spelling").queue();
                     response.getParsingError().ifPresent(e -> {
-                        LOG.error("Parsing Exception: ", e);
-                        LOG.error("Original body: " + e.getOriginalBody());
+                        LOGGER.error("Parsing Exception: ", e);
+                        LOGGER.error("Original body: " + e.getOriginalBody());
                     });
                 });
     }
