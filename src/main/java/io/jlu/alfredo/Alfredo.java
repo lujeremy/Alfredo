@@ -22,33 +22,43 @@ public class Alfredo extends ListenerAdapter {
     private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
+        setCommands("credentials.txt");
+        setBotBuilder("token.txt").build();
+    }
 
-        File file = new File("credentials.txt");
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        String jdbcUrl = br.readLine();
-        Jdbi jdbi = Jdbi.create(jdbcUrl, br.readLine(), br.readLine());
-
+    private static JDABuilder setBotBuilder(String filename) throws IOException {
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        file = new File("token.txt");
-        br = new BufferedReader(new FileReader(file));
-
+        File file = new File(filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
         String token = br.readLine();
+
+        builder.setToken(token);
+        builder.addEventListener(new Alfredo());
+        
+        return builder;
+    }
+
+    private static void setCommands(String filename) {
+        // Add only the db-related commands if db credentials are provided
+        try {
+            File file = new File(filename);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String jdbcUrl = br.readLine();
+            Jdbi jdbi = Jdbi.create(jdbcUrl, br.readLine(), br.readLine());
+
+            commandMap.put("record", new RecordCommand(jdbi));
+            commandMap.put("show", new ShowCommand(jdbi));
+        } catch (IOException e) {
+            System.err.println("Database credentials not found or invalid, connection not established. All db commands will fail");
+        }
 
         commandMap.put("compliment", new ComplimentCommand());
         commandMap.put("roast", new RoastCommand());
-        commandMap.put("record", new RecordCommand(jdbi));
-        commandMap.put("show", new ShowCommand(jdbi));
         commandMap.put("nature", new NatureCommand());
         commandMap.put("pokemon", new PokemonCommand());
         commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
         commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
         commandMap.put("help", new HelpCommand());
-
-        builder.setToken(token);
-        builder.addEventListener(new Alfredo());
-
-        builder.build();
     }
 
     @Override
