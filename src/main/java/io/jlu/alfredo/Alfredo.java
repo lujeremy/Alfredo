@@ -18,27 +18,61 @@ import java.util.Map;
 
 public class Alfredo extends ListenerAdapter {
 
+    private static final String CREDENTIALS_FILE = "credentials.txt";
+    private static final String TOKEN_FILE = "token.txt";
     private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static Map<String, Command> commandMap = new HashMap<>();
 
     public static void main(String[] args) throws LoginException, IOException {
-        setCommands("credentials.txt");
-        setBotBuilder("token.txt").build();
+        getInstance().init(CREDENTIALS_FILE, TOKEN_FILE);
     }
 
-    private static JDABuilder setBotBuilder(String filename) throws IOException {
+    /**
+     * Singleton instance
+     */
+    private static Alfredo INSTANCE = null;
+
+    private Map<String, Command> commandMap;
+
+    private Alfredo() {
+        commandMap = new HashMap<>();
+    }
+
+    public static Alfredo getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Alfredo();
+        }
+
+        return INSTANCE;
+    }
+
+    /**
+     * Initialize the bot
+     */
+    public void init(String credentialsFile, String tokenFile) throws LoginException, IOException {
+        // obligatory ascii art
+        System.out.println(
+               "   _   _  __              _     \n" +
+                       "  /_\\ | |/ _|_ __ ___  __| | ___  \n" +
+                       " //_\\\\| | |_| '__/ _ \\/ _` |/ _ \\ \n" +
+                       "/  _  \\ |  _| | |  __/ (_| | (_) |\n" +
+                       "\\_/ \\_/_|_| |_|  \\___|\\__,_|\\___/ \n"
+        );
+
+        this.setCommands(credentialsFile);
+
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        File file = new File(filename);
+        File file = new File(tokenFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
         String token = br.readLine();
 
         builder.setToken(token);
         builder.addEventListener(new Alfredo());
-        
-        return builder;
+        builder.build();
+
+        LOGGER.info("Alfredo successfully built with token");
     }
 
-    private static void setCommands(String filename) {
+    private void setCommands(String filename) {
         // Add only the db-related commands if db credentials are provided
         try {
             File file = new File(filename);
@@ -67,7 +101,7 @@ public class Alfredo extends ListenerAdapter {
 
         LOGGER.info("We received a message from " +
                 author.getName() + ": " +
-                event.getMessage().getContentDisplay()
+                event.getMessage().getContentRaw()
         );
 
         String contentRaw = event.getMessage().getContentRaw();
@@ -92,5 +126,9 @@ public class Alfredo extends ListenerAdapter {
                 LOGGER.warn("No existing command");
             }
         }
+    }
+
+    public Map<String, Command> getCommandMap() {
+        return commandMap;
     }
 }
