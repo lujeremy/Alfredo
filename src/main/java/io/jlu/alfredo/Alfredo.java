@@ -20,7 +20,7 @@ public class Alfredo extends ListenerAdapter {
 
     private static final String CREDENTIALS_FILE = "credentials.txt";
     private static final String TOKEN_FILE = "token.txt";
-    private final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static void main(String[] args) throws LoginException, IOException {
         getInstance().init(CREDENTIALS_FILE, TOKEN_FILE);
@@ -31,11 +31,9 @@ public class Alfredo extends ListenerAdapter {
      */
     private static Alfredo INSTANCE = null;
 
-    private Map<String, Command> commandMap;
+    private Map<String, Command> commandMap = new HashMap<>();
 
-    private Alfredo() {
-        commandMap = new HashMap<>();
-    }
+    private Alfredo() {}
 
     public static Alfredo getInstance() {
         if (INSTANCE == null) {
@@ -58,7 +56,7 @@ public class Alfredo extends ListenerAdapter {
                        "\\_/ \\_/_|_| |_|  \\___|\\__,_|\\___/ \n"
         );
 
-        this.setCommands(credentialsFile);
+        commandMap = initCommands(credentialsFile);
 
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File(tokenFile);
@@ -66,13 +64,22 @@ public class Alfredo extends ListenerAdapter {
         String token = br.readLine();
 
         builder.setToken(token);
-        builder.addEventListener(new Alfredo());
+        builder.addEventListener(getInstance());
         builder.build();
 
         LOGGER.info("Alfredo successfully built with token");
     }
 
-    private void setCommands(String filename) {
+    static Map<String, Command> initCommands(String filename) {
+        Map<String, Command> commands = new HashMap<>();
+        commands.put("compliment", new ComplimentCommand());
+        commands.put("roast", new RoastCommand());
+        commands.put("nature", new NatureCommand());
+        commands.put("pokemon", new PokemonCommand());
+        commands.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
+        commands.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
+        commands.put("help", new HelpCommand());
+
         // Add only the db-related commands if db credentials are provided
         try {
             File file = new File(filename);
@@ -80,19 +87,13 @@ public class Alfredo extends ListenerAdapter {
             String jdbcUrl = br.readLine();
             Jdbi jdbi = Jdbi.create(jdbcUrl, br.readLine(), br.readLine());
 
-            commandMap.put("record", new RecordCommand(jdbi));
-            commandMap.put("show", new ShowCommand(jdbi));
+            commands.put("record", new RecordCommand(jdbi));
+            commands.put("show", new ShowCommand(jdbi));
         } catch (IOException e) {
-            System.err.println("Database credentials not found or invalid, connection not established. All db commands will fail");
+            LOGGER.error("Database credentials not found or invalid, connection not established. All db commands will fail");
         }
 
-        commandMap.put("compliment", new ComplimentCommand());
-        commandMap.put("roast", new RoastCommand());
-        commandMap.put("nature", new NatureCommand());
-        commandMap.put("pokemon", new PokemonCommand());
-        commandMap.put("hi", (event, parameter) -> event.getChannel().sendMessage("Hello, " + event.getAuthor().getName()).queue());
-        commandMap.put("ahnee", (event, parameter) -> event.getChannel().sendMessage("frick").queue());
-        commandMap.put("help", new HelpCommand());
+        return commands;
     }
 
     @Override

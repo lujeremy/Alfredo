@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.impl.MemberImpl;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.junit.jupiter.api.*;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,9 +49,18 @@ public class AlfredoUtilsTest {
     }
 
     @Test
-    @DisplayName("ooof")
+    @DisplayName("Matching member should return correct user, ignoring case")
     void testMatchingMember() {
-        AlfredoUtils.getFirstMatchingMember("Y", mockEvent);
+        Member match = AlfredoUtils.getFirstMatchingMember("yElLoW beaver", mockEvent);
+        assertNotNull(match);
+        assertEquals(match.getUser().getName(), "Yellow Beaver");
+    }
+
+    @Test
+    @DisplayName("Matching member should return null when there are no matches")
+    void testNoMatchingMember() {
+        Member noMatch = AlfredoUtils.getFirstMatchingMember("blue beaver", mockEvent);
+        assertNull(noMatch);
     }
 
 }

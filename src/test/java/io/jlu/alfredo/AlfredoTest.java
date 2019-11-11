@@ -1,9 +1,11 @@
 package io.jlu.alfredo;
 
+import io.jlu.alfredo.commands.Command;
 import org.junit.jupiter.api.*;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,10 +21,8 @@ class AlfredoTest {
     @Test
     @DisplayName("IOException is thrown when incorrect token file is provided ╯°□°）╯")
     void testNoToken() {
-        Exception exception = assertThrows(IOException.class, () ->
+        assertThrows(IOException.class, () ->
                 INSTANCE.init("credentials.txt", "NOT A TOKEN"));
-        assertEquals("NOT A TOKEN (The system cannot find the file specified)",
-                exception.getMessage());
     }
 
     @Test
@@ -43,18 +43,18 @@ class AlfredoTest {
 
     @Test
     @DisplayName("Without credentials, DB-related commands should not be initialized")
-    void testMNoCredentialsMap() throws LoginException, IOException {
-        INSTANCE.init("Potato", "token.txt");
-        assertNull(INSTANCE.getCommandMap().get("record"));
-        assertNull(INSTANCE.getCommandMap().get("show"));
+    void testMNoCredentialsMap() {
+        Map<String, Command> map = Alfredo.initCommands("Potato");
+        assertNull(map.get("record"));
+        assertNull(map.get("show"));
     }
 
     @Test
     @DisplayName("With credentials, DB-related commands should be initialized")
-    void testCredentialsMap() throws LoginException, IOException {
-        INSTANCE.init("credentials.txt", "token.txt");
-        assertNotNull(INSTANCE.getCommandMap().get("record"));
-        assertNotNull(INSTANCE.getCommandMap().get("show"));
+    void testCredentialsMap() {
+        Map<String, Command> map = Alfredo.initCommands("credentials.txt");
+        assertNotNull(map.get("record"));
+        assertNotNull(map.get("show"));
     }
 
     @AfterEach
