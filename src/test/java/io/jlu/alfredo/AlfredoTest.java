@@ -10,13 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class AlfredoTest {
 
     private static Alfredo INSTANCE;
-    //TODO: use following MRE mock for command tests
-//    private static MessageReceivedEvent mockEvent;
-//        mockEvent = mock(MessageReceivedEvent.class);
-//        Message message = new MessageBuilder().setContent("!oof").build();
-//        User user = new UserImpl(1, null).setName("Yellow Beaver");
-//        when(mockEvent.getMessage()).thenReturn(message);
-//        when(mockEvent.getAuthor()).thenReturn(user);
 
     @BeforeEach
     void init() {

@@ -68,4 +68,8 @@ public class AlfredoUtils {
         pokemonTypeColors.put("dark", Color.decode("#705848"));
         pokemonTypeColors.put("fairy", Color.decode("#EE99AC"));
     }
+
+    public static Map<String, Color> getPokemonTypeColors() {
+        return pokemonTypeColors;
+    }
 }
