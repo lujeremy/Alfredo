@@ -58,6 +58,7 @@ public class Alfredo extends ListenerAdapter {
 
         commandMap = initCommands(credentialsFile);
 
+        // Allow bot to throw IO / LoginException here since bot cannot instantiate w/o a token
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         File file = new File(tokenFile);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -129,7 +130,4 @@ public class Alfredo extends ListenerAdapter {
         }
     }
 
-    public Map<String, Command> getCommandMap() {
-        return commandMap;
-    }
 }

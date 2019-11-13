@@ -63,4 +63,18 @@ public class AlfredoUtilsTest {
         assertNull(noMatch);
     }
 
+    @Test
+    @DisplayName("Empty strings should not match anything")
+    void testNoEmptyStringMatches() {
+        Member noMatch = AlfredoUtils.getFirstMatchingMember("", mockEvent);
+        assertNull(noMatch);
+    }
+
+    @Test
+    @DisplayName("Spaces should not match anything")
+    void testSpaceStringMatches() {
+        Member noMatch = AlfredoUtils.getFirstMatchingMember(" ", mockEvent);
+        assertNull(noMatch);
+    }
+
 }
