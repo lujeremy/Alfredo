@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 public class AlfredoUtilsTest {
 
-    //TODO: use following MRE mock for command tests
     private static MessageReceivedEvent mockEvent;
 
     @BeforeEach
@@ -39,13 +38,6 @@ public class AlfredoUtilsTest {
         when(mockEvent.getMessage()).thenReturn(message);
         when(mockEvent.getAuthor()).thenReturn(user);
         when(mockEvent.getGuild()).thenReturn(mockGuild);
-    }
-
-    @Test
-    @DisplayName("Ensure color-type map is setup correctly when utils is called statically")
-    void testDefineColors() {
-        assertEquals(18,
-                AlfredoUtils.getPokemonTypeColors().size());
     }
 
     @Test
