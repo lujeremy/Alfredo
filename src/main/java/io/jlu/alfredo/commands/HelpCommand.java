@@ -40,7 +40,6 @@ public class HelpCommand implements Command {
     public void handleEvent(MessageReceivedEvent event, String parameter) {
         EmbedBuilder helpEmbed = new EmbedBuilder()
             .setTitle("Alfredo's Abilities <:TohruGun:605162460479094804>")
-            .setThumbnail(event.getAuthor().getAvatarUrl())
             .setColor(new Color(255, 105, 18));
 
         commandDefinitions
@@ -48,4 +47,12 @@ public class HelpCommand implements Command {
 
         event.getChannel().sendMessage(helpEmbed.build()).queue();
     }
+
+    /**
+     * For testing
+     */
+    static Map<String, String> getCommandDefinitions() {
+        return commandDefinitions;
+    }
+
 }

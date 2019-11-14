@@ -19,6 +19,7 @@ target/
 token.txt
 credentials.txt
 .idea/.name
+.idea/*
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
